@@ -2,7 +2,6 @@
 
 # fazendo parse do arquivo de query
 import numpy as np
-import pandas as pd
 
 cfquery = 'cfc/cfquery'
 queryFile = []
@@ -14,13 +13,17 @@ def scoreCalc(weigth, v):
     return weighted_avg
 
 def insertQ(i, value, vector):
+    #print("aqui3")
     if(len(vector) <= i):
+        #print("aqui4")
         vector.insert(i,value)
     else:
         if(type(value) is list):
-            print(vector[i])
+            #print("aqui5")
+           # print(vector[i])
             vector[i].extend(value)
         else:
+           # print("aqui6")
             vector[i] += ' ' + value
 
 def constructQueryVector(vector, line, cod):  
@@ -34,13 +37,24 @@ def constructQueryVector(vector, line, cod):
         insertQ(2, line, vector)
         
     elif(cod == 'RD'):
-        v = line.split("  ")
+        #line = line.strip().replace("  ", " ")
+        v = line.split(' ')
+    
         for i, result in enumerate(v):
-            v1 = result.split(" ")
-            score = scoreCalc(weight, v1[1])
-            v1.insert(1,score)
-            v.insert(i, v1)
-        
+            print("result" + result)
+            if not(result):
+                break
+            v1 = []
+            v1.append(result)
+            print(v1)
+            if(len(v1) == 2):
+                v1[0] = int(v1[0])
+                score = scoreCalc(weight, v1[1])
+                v1[1][score]
+                print(v1)
+                v[i] = v1
+                print(v)
+        return        
         insertQ(3, v, vector)
     else:
         pass
@@ -52,7 +66,6 @@ def queryMatrix(file):
         line = fp.readline()
         cod = line[:2]
         constructQueryVector(vector, line[3:].strip(), cod)
-        
         while line:
             line = fp.readline()
             
@@ -68,8 +81,9 @@ def queryMatrix(file):
     fp.close()
     return matrix
 
-queryFile.extend(queryMatrix(cfquery))
-pd.DataFrame(queryFile)    
 
-print(queryFile)
-print("oi")
+m = queryMatrix(cfquery)
+
+queryFile.extend(m)
+
+
