@@ -39,23 +39,20 @@ def constructQueryVector(vector, line, cod):
     elif(cod == 'RD'):
         #line = line.strip().replace("  ", " ")
         v = line.split(' ')
-    
+        v1 = []
+        ve = []
         for i, result in enumerate(v):
-            print("result" + result)
             if not(result):
-                break
-            v1 = []
+                continue          
             v1.append(result)
-            print(v1)
             if(len(v1) == 2):
                 v1[0] = int(v1[0])
                 score = scoreCalc(weight, v1[1])
-                v1[1][score]
-                print(v1)
-                v[i] = v1
-                print(v)
+                v1[1] = score
+                ve.append(v1)
+                v1 = []
         return        
-        insertQ(3, v, vector)
+        insertQ(3, ve, vector)
     else:
         pass
 
@@ -86,4 +83,4 @@ m = queryMatrix(cfquery)
 
 queryFile.extend(m)
 
-
+print(queryFile)
